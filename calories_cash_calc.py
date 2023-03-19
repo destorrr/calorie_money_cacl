@@ -1,12 +1,15 @@
 """
 Модуль содержит классы: калькулятор калорий и калькулятор денежных средств.
 """
+import datetime as dt
 
 
 class Record():
     """Класс для создания записей калькуляторов."""
 
-    def __init__(self, amount: int, comment: str, date: 'date'):
+    today = dt.datetime.today().date()
+
+    def __init__(self, amount: int, comment: str, date: 'date' = today):
         """Конструктор инициализирует количеcтво 'amount' (денежная сумма или
         количество килокалорий), дату создания записи 'date' (передается в
         явном виде в конструктор или присваивается значение по умолчанию -
@@ -15,7 +18,11 @@ class Record():
         """
         self.amount = amount
         self.comment = comment
-        self.date = date
+        date_format = '%d.%m.%Y'
+        if not isinstance(date, dt.date):
+            self.date = dt.datetime.strptime(date, date_format).date()
+        else:
+            self.date = date
 
 
 class Calculator():
@@ -36,7 +43,13 @@ class Calculator():
 
     def get_today_stats(self):
         """Считает статистику за сегодня."""
-        pass
+        today = dt.datetime.today().date()
+        count = 0
+        for record in self.records:
+            if record.date != today:
+                continue
+            count += record.amount
+        return count
 
     def get_week_stats(self):
         """Считает статистику за последние 7 дней."""
@@ -52,7 +65,8 @@ class CaloriesCalculator(Calculator):
 
     def get_today_stats(self):
         """Считает сколько каллорий уже съедено сегодня."""
-        pass
+        count = super().get_today_stats()
+        return f'За сегодня потрачено {count} калорий.'
 
     def get_calories_remained(self):
         """Определяет сколько еще калорий можно/нужно получить сегодня."""
@@ -72,7 +86,8 @@ class CashCalculator(Calculator):
 
     def get_today_stats(self):
         """Считает сколько сегодня потрачено денег."""
-        pass
+        count = super().get_today_stats()
+        return f'За сегодня потрачено {count} денег.'
 
     def get_today_cash_remained(self, currency: str):
         """Определяет сколько еще денег сегодня можно потратить в рублях,
