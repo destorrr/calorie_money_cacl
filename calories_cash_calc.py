@@ -74,7 +74,12 @@ class CaloriesCalculator(Calculator):
 
     def get_calories_remained(self):
         """Определяет сколько еще калорий можно/нужно получить сегодня."""
-        pass
+        count = super().get_today_stats()
+        if count < self.limit:
+            balance = self.limit - count
+            return (f'Сегодня можно съесть что-нибудь ещё, но с общей '
+                    f'калорийностью не более {balance} кКал')
+        return f'Хватит есть!'
 
     def get_week_stats(self):
         """Считает сколько калорий получено за последние 7 дней."""
