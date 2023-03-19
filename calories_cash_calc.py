@@ -3,12 +3,52 @@
 """
 
 
-class CaloriesCalculator():
+class Record():
+    """Класс для создания записей калькуляторов."""
+
+    def __init__(self, amount: int, comment: str, date: 'date'):
+        """Конструктор инициализирует количеcтво 'amount' (денежная сумма или
+        количество килокалорий), дату создания записи 'date' (передается в
+        явном виде в конструктор или присваивается значение по умолчанию -
+        теущая дата), комментарий 'comment' (поясняет на что потрачены деньги
+        или откуда взялись калории).
+        """
+        self.amount = amount
+        self.comment = comment
+        self.date = date
+
+
+class Calculator():
+    """Содержит общую функциональность калькуляторов: хранение записей,
+    фиксирование дненого лимита, суммирование записей за конкретные даты.
+    """
+
+    def __init__(self, limit: int):
+        """Инициализация общего калькулятора.
+        """
+        self.limit = limit
+        self.records = []
+
+    def add_record(self, record: object):
+        """Добавляет новую запись в список."""
+        self.records.append(record)
+        return f'Запись добавлена в список.'
+
+    def get_today_stats(self):
+        """Считает статистику за сегодня."""
+        pass
+
+    def get_week_stats(self):
+        """Считает статистику за последние 7 дней."""
+        pass
+
+
+class CaloriesCalculator(Calculator):
     """Класс реализует функционал калькулятора каллорий."""
 
-    def add_record(self):
-        """Сохраняет новую запись о приеме пищи."""
-        pass
+    def __init__(self, limit: int):
+        """Инициализация калькулятора калорий."""
+        super().__init__(limit)
 
     def get_today_stats(self):
         """Считает сколько каллорий уже съедено сегодня."""
@@ -23,18 +63,18 @@ class CaloriesCalculator():
         pass
 
 
-class CashCalculator():
+class CashCalculator(Calculator):
     """Класс реализует функционал калькулятора денежных средств."""
 
-    def add_record(self):
-        """Сохраняет новую запись о расходах."""
-        pass
+    def __init__(self, limit: int):
+        """Инициализация калькулятора денежных средств."""
+        super().__init__(limit)
 
     def get_today_stats(self):
         """Считает сколько сегодня потрачено денег."""
         pass
 
-    def get_today_cash_remained(self, currency):
+    def get_today_cash_remained(self, currency: str):
         """Определяет сколько еще денег сегодня можно потратить в рублях,
         долларах, евро.
          """
