@@ -3,7 +3,7 @@ import re
 from datetime import datetime
 
 try:
-    import calorie_money_calc
+    import calories_cash_calc
 except ModuleNotFoundError:
     assert False, 'Не найдена домашняя работа'
 
@@ -14,9 +14,9 @@ class TestRecord:
 
     @pytest.mark.parametrize("kwargs", init_records)
     def test_init(self, kwargs, msg_err):
-        assert hasattr(calorie_money_calc, 'Record'), msg_err(
+        assert hasattr(calories_cash_calc, 'Record'), msg_err(
             'add_class', 'Record')
-        result = calorie_money_calc.Record(**kwargs)
+        result = calories_cash_calc.Record(**kwargs)
         assert hasattr(result, 'amount'), msg_err(
             'add_attr', 'amount', 'Record')
         assert result.amount == kwargs['amount'],  msg_err(
@@ -44,9 +44,9 @@ class TestRecord:
 class TestCalculator:
 
     def test_init(self, init_limit, msg_err):
-        assert hasattr(calorie_money_calc, 'Calculator'), msg_err(
+        assert hasattr(calories_cash_calc, 'Calculator'), msg_err(
             'add_class', 'Calculator')
-        result = calorie_money_calc.Calculator(init_limit)
+        result = calories_cash_calc.Calculator(init_limit)
         assert hasattr(result, 'limit'), msg_err(
             'add_attr', 'limit', 'Calculator')
         assert result.limit == init_limit,  msg_err(
@@ -62,7 +62,7 @@ class TestCalculator:
             'dont_create_attr', 'EURO_RATE', 'Calculator')
 
     def test_add_record(self, init_limit, data_records, msg_err):
-        result = calorie_money_calc.Calculator(init_limit)
+        result = calories_cash_calc.Calculator(init_limit)
         assert hasattr(result, 'add_record'), msg_err(
             'add_method', 'add_record', 'Calculator')
         records, today, week = data_records
@@ -72,7 +72,7 @@ class TestCalculator:
             'wrong_attr', 'records', 'Calculator')
 
     def test_get_today_stats(self, init_limit, data_records, msg_err):
-        result = calorie_money_calc.Calculator(init_limit)
+        result = calories_cash_calc.Calculator(init_limit)
         records, today, week = data_records
         for record in records:
             result.add_record(record)
@@ -82,7 +82,7 @@ class TestCalculator:
             'wrong_method', 'get_today_stats', 'Calculator')
 
     def test_get_week_stats(self, init_limit, data_records, msg_err):
-        result = calorie_money_calc.Calculator(init_limit)
+        result = calories_cash_calc.Calculator(init_limit)
         records, today, week = data_records
         for record in records:
             result.add_record(record)
@@ -92,12 +92,12 @@ class TestCalculator:
             'wrong_method', 'get_week_stats', 'Calculator')
 
     def test_get_calories_remained(self, init_limit, msg_err):
-        result = calorie_money_calc.Calculator(init_limit)
+        result = calories_cash_calc.Calculator(init_limit)
         assert not hasattr(result, 'get_calories_remained'), \
             msg_err('dont_create_method', 'get_calories_remained', 'Calculator')
 
     def test_get_today_cash_remained(self, init_limit, msg_err):
-        result = calorie_money_calc.Calculator(init_limit)
+        result = calories_cash_calc.Calculator(init_limit)
         assert not hasattr(result, 'get_today_cash_remained'), \
             msg_err('dont_create_method',
                     'get_today_cash_remained', 'Calculator')
@@ -106,10 +106,10 @@ class TestCalculator:
 class TestCaloriesCalculator:
 
     def test_init(self, init_limit, msg_err):
-        assert hasattr(calorie_money_calc, 'CaloriesCalculator'), \
+        assert hasattr(calories_cash_calc, 'CaloriesCalculator'), \
             msg_err('add_class', 'CaloriesCalculator',
                     child=True, parent_name='Calculator')
-        result = calorie_money_calc.CaloriesCalculator(init_limit)
+        result = calories_cash_calc.CaloriesCalculator(init_limit)
         assert hasattr(result, 'limit'), msg_err(
             'child_method', 'CaloriesCalculator', 'Calculator')
         assert result.limit == init_limit, msg_err(
@@ -122,7 +122,7 @@ class TestCaloriesCalculator:
 
     def test_get_calories_remained(self, init_limit, data_records,
                                    negative_calories_remained, positive_calories_remained, msg_err):
-        result = calorie_money_calc.CaloriesCalculator(init_limit)
+        result = calories_cash_calc.CaloriesCalculator(init_limit)
         assert hasattr(result, 'get_calories_remained'), \
             msg_err('add_method', 'get_calories_remained', 'CaloriesCalculator')
 
@@ -151,10 +151,10 @@ class TestCaloriesCalculator:
 class TestCashCalculator:
 
     def test_init(self, init_limit, msg_err):
-        assert hasattr(calorie_money_calc, 'CashCalculator'), \
+        assert hasattr(calories_cash_calc, 'CashCalculator'), \
             msg_err('add_class', 'CashCalculator',
                     child=True, parent_name='Calculator')
-        result = calorie_money_calc.CashCalculator(init_limit)
+        result = calories_cash_calc.CashCalculator(init_limit)
         assert hasattr(result, 'limit'), msg_err(
             'child_method', 'CashCalculator', 'Calculator')
         assert result.limit == init_limit, msg_err(
@@ -182,7 +182,7 @@ class TestCashCalculator:
     def test_get_today_cash_remained(self, init_limit, data_records, amount, currency, today_cash_remained, msg_err,
                                      monkeypatch):
 
-        result = calorie_money_calc.CashCalculator(init_limit)
+        result = calories_cash_calc.CashCalculator(init_limit)
         assert hasattr(result, 'get_today_cash_remained'), \
             msg_err('add_method', 'get_today_cash_remained', 'CashCalculator')
 
@@ -191,9 +191,9 @@ class TestCashCalculator:
             result.add_record(record)
 
         result.EURO_RATE = 70
-        monkeypatch.setattr(calorie_money_calc.CashCalculator, "EURO_RATE", 70)
+        monkeypatch.setattr(calories_cash_calc.CashCalculator, "EURO_RATE", 70)
         result.USD_RATE = 60
-        monkeypatch.setattr(calorie_money_calc.CashCalculator, "USD_RATE", 60)
+        monkeypatch.setattr(calories_cash_calc.CashCalculator, "USD_RATE", 60)
         result.limit = today + (amount * 300)
         assert re.fullmatch(today_cash_remained(amount, currency), result.get_today_cash_remained(currency)), \
             msg_err('wrong_method', 'get_today_cash_remained', 'CashCalculator')
