@@ -35,6 +35,7 @@ class Calculator():
         """
         self.limit = limit
         self.records = []
+        self.today = dt.datetime.today().date()
 
     def add_record(self, record: object):
         """Добавляет новую запись в список."""
@@ -43,17 +44,20 @@ class Calculator():
 
     def get_today_stats(self):
         """Считает статистику за сегодня."""
-        today = dt.datetime.today().date()
         count = 0
         for record in self.records:
-            if record.date != today:
+            if record.date != self.today:
                 continue
             count += record.amount
         return count
 
     def get_week_stats(self):
         """Считает статистику за последние 7 дней."""
-        pass
+        count = 0
+        for record in self.records:
+            if self.today - dt.timedelta(days=6) <= record.date <= self.today:
+                count += record.amount
+        return count
 
 
 class CaloriesCalculator(Calculator):
@@ -66,7 +70,7 @@ class CaloriesCalculator(Calculator):
     def get_today_stats(self):
         """Считает сколько каллорий уже съедено сегодня."""
         count = super().get_today_stats()
-        return f'За сегодня потрачено {count} калорий.'
+        return f'За сегодня получено {count} калорий.'
 
     def get_calories_remained(self):
         """Определяет сколько еще калорий можно/нужно получить сегодня."""
@@ -74,7 +78,8 @@ class CaloriesCalculator(Calculator):
 
     def get_week_stats(self):
         """Считает сколько калорий получено за последние 7 дней."""
-        pass
+        count = super().get_week_stats()
+        return f'За последние 7 дней получено {count} калорий.'
 
 
 class CashCalculator(Calculator):
@@ -97,4 +102,5 @@ class CashCalculator(Calculator):
 
     def get_week_stats(self):
         """Считает сколько денег потрачено за последние 7 дней."""
-        pass
+        count = super().get_week_stats()
+        return f'За последние 7 дней потрачено {count} денег.'
