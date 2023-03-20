@@ -89,6 +89,8 @@ class CaloriesCalculator(Calculator):
 
 class CashCalculator(Calculator):
     """Класс реализует функционал калькулятора денежных средств."""
+    USD_RATE = 70.00
+    EURO_RATE = 90.00
 
     def __init__(self, limit: int):
         """Инициализация калькулятора денежных средств."""
@@ -103,7 +105,28 @@ class CashCalculator(Calculator):
         """Определяет сколько еще денег сегодня можно потратить в рублях,
         долларах, евро.
          """
-        pass
+
+        if currency == 'rub':
+            currency = 'руб'
+            rate = 1.00
+        elif currency == 'usd':
+            currency = 'USD'
+            rate = self.USD_RATE
+        elif currency == 'eur':
+            currency = 'Euro'
+            rate = self.EURO_RATE
+
+        count = super().get_today_stats()
+
+        diff = self.limit - count
+
+        if diff == 0:
+            return 'Денег нет, держись'
+
+        balance = abs(round(diff / rate, 2))
+        if diff > 0:
+            return f'На сегодня осталось {balance} {currency}'
+        return f'Денег нет, держись: твой долг - {balance} {currency}'
 
     def get_week_stats(self):
         """Считает сколько денег потрачено за последние 7 дней."""
