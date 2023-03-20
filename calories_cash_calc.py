@@ -46,9 +46,8 @@ class Calculator():
         """Считает статистику за сегодня."""
         count = 0
         for record in self.records:
-            if record.date != self.today:
-                continue
-            count += record.amount
+            if record.date == self.today:
+                count += record.amount
         return count
 
     def get_week_stats(self):
@@ -91,6 +90,7 @@ class CashCalculator(Calculator):
     """Класс реализует функционал калькулятора денежных средств."""
     USD_RATE = 70.00
     EURO_RATE = 90.00
+    RUB_RATE = 1.00
 
     def __init__(self, limit: int):
         """Инициализация калькулятора денежных средств."""
@@ -108,7 +108,7 @@ class CashCalculator(Calculator):
 
         if currency == 'rub':
             currency = 'руб'
-            rate = 1.00
+            rate = self.RUB_RATE
         elif currency == 'usd':
             currency = 'USD'
             rate = self.USD_RATE
